@@ -1099,7 +1099,7 @@ class DummyDispatcher:
         self._readable = readable
         self._writable = writable
         self._error = error
-        self.input_buffer = ''
+        self.input_buffer = b''
         if readable:
             # only readable dispatchers should have these methods
             def reopenlogs():

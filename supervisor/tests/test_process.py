@@ -578,7 +578,7 @@ class SubprocessTests(unittest.TestCase):
         options = DummyOptions()
         config = DummyPConfig(options, 'output', executable)
         instance = self._makeOne(config)
-        sent = 'a' * (1 << 13)
+        sent = b'a' * (1 << 13)
         self.assertRaises(OSError, instance.write, sent)
         options.forkpid = 1
         instance.spawn()

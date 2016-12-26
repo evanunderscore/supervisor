@@ -524,28 +524,28 @@ class PInputDispatcherTests(unittest.TestCase):
     def test_writable_open_nodata(self):
         process = DummyProcess(None)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = 'a'
+        dispatcher.input_buffer = b'a'
         dispatcher.closed = False
         self.assertEqual(dispatcher.writable(), True)
 
     def test_writable_open_withdata(self):
         process = DummyProcess(None)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = ''
+        dispatcher.input_buffer = b''
         dispatcher.closed = False
         self.assertEqual(dispatcher.writable(), False)
 
     def test_writable_closed_nodata(self):
         process = DummyProcess(None)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = 'a'
+        dispatcher.input_buffer = b'a'
         dispatcher.closed = True
         self.assertEqual(dispatcher.writable(), False)
 
     def test_writable_closed_withdata(self):
         process = DummyProcess(None)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = ''
+        dispatcher.input_buffer = b''
         dispatcher.closed = True
         self.assertEqual(dispatcher.writable(), False)
 
@@ -559,7 +559,7 @@ class PInputDispatcherTests(unittest.TestCase):
         config = DummyPConfig(options, 'process1', '/bin/process1')
         process = DummyProcess(config)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = 'halloooo'
+        dispatcher.input_buffer = b'halloooo'
         self.assertEqual(dispatcher.handle_write_event(), None)
         self.assertEqual(options.written[0], 'halloooo')
 
@@ -578,11 +578,11 @@ class PInputDispatcherTests(unittest.TestCase):
         config = DummyPConfig(options, 'test', '/test')
         process = DummyProcess(config)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = 'halloooo'
+        dispatcher.input_buffer = b'halloooo'
         import errno
         options.write_error = errno.EPIPE
         dispatcher.handle_write_event()
-        self.assertEqual(dispatcher.input_buffer, '')
+        self.assertEqual(dispatcher.input_buffer, b'')
         self.assertTrue(options.logger.data[0].startswith(
             'fd 0 closed, stopped monitoring'))
         self.assertTrue(options.logger.data[0].endswith('(stdin)>'))
@@ -592,7 +592,7 @@ class PInputDispatcherTests(unittest.TestCase):
         config = DummyPConfig(options, 'test', '/test')
         process = DummyProcess(config)
         dispatcher = self._makeOne(process)
-        dispatcher.input_buffer = 'halloooo'
+        dispatcher.input_buffer = b'halloooo'
         import errno
         options.write_error = errno.EBADF
         self.assertRaises(OSError, dispatcher.handle_write_event)
@@ -603,10 +603,10 @@ class PInputDispatcherTests(unittest.TestCase):
         process = DummyProcess(config)
         dispatcher = self._makeOne(process)
         options.write_accept = 1
-        dispatcher.input_buffer = 'a' * 50
+        dispatcher.input_buffer = b'a' * 50
         dispatcher.handle_write_event()
         self.assertEqual(len(dispatcher.input_buffer), 49)
-        self.assertEqual(options.written[0], 'a')
+        self.assertEqual(options.written[0], b'a')
 
     def test_handle_read_event(self):
         process = DummyProcess(None)
