@@ -260,10 +260,11 @@ class http_request:
                     )
 
     def push (self, thing):
-        if type(thing) == type(''):
+        if isinstance(thing, bytes):
             self.outgoing.append(producers.simple_producer(thing,
               buffer_size=len(thing)))
         else:
+            assert not isinstance(thing, str)
             self.outgoing.append(thing)
 
     def response (self, code=200):
